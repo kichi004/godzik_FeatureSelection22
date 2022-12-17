@@ -23,7 +23,7 @@ def loocv_rf_classifier(file_name):
     loo = LeaveOneOut()
 
     # Initialize random forest classifier 
-    rfc_model = RandomForestClassifier(n_estimators = 35)
+    rfc_model = RandomForestClassifier(n_estimators = 30)
 
     # Initialize a list to store the scores
     scores_list = []
