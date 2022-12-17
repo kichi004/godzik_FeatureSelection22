@@ -1,0 +1,3 @@
+changed in dataset
+Survival = 1, Fatality = 0 
+M = 1, F = 0
