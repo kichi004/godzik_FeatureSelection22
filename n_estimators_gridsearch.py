@@ -17,11 +17,7 @@ trees_parameters = {'n_estimators': [10, 20, 30, 40, 50, 60]} # returned 20, 45,
 best_params_list = []
 
 # loops the following 
-<<<<<<< Updated upstream
-for i in range(50):
-=======
 for i in range(100):
->>>>>>> Stashed changes
     # initialize random forest classifier model
     rfc_model = RandomForestClassifier()
 
