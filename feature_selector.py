@@ -26,7 +26,7 @@ def featureSelection(n):
     top_n_features = [dataset_features.columns[i] for i in indices[:n]]
 
     # display the top n important features
-    print(top_n_features)
+    # print(top_n_features)
 
     # create new dataframe with the top features
     df_important = df[['0'] + top_n_features]
