@@ -4,13 +4,13 @@ import pandas as pd
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier
 
-def featureSelection(n):
+def select_features(n):
     # load dataset
-    df = pd.read_csv('imputed.csv')
+    df = pd.read_csv('_imputed_data.csv')
 
     # split dataset into features and targets
-    dataset_features = df.drop('0', axis=1)
-    dataset_targets = df['0']
+    dataset_features = df.drop('Group', axis=1)
+    dataset_targets = df['Group']
 
     # train random forest classifier
     rfc = RandomForestClassifier()
@@ -29,7 +29,7 @@ def featureSelection(n):
     # print(top_n_features)
 
     # create new dataframe with the top features
-    df_important = df[['0'] + top_n_features]
+    df_important = df[['Group'] + top_n_features]
 
     # output the new dataframe to a CSV file
-    df_important.to_csv('important_features.csv', index=False)
+    df_important.to_csv('_top_features.csv', index=False)

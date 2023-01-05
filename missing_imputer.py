@@ -6,17 +6,22 @@ from sklearn.impute import SimpleImputer
 from sklearn.compose import ColumnTransformer
 
 # load data into a pandas dataframe
-df = pd.read_csv("FatalVSSurvival2.csv")
+df = pd.read_csv("_survival_data_initial.csv")
 
 # creates a simple imputer detecing missing values 'NaN' and replacing with the mean of the column
 simp = SimpleImputer(missing_values = np.nan, strategy = 'mean')
 
-# creates a column transformer object with the imputer
-ctf = ColumnTransformer([('imp', simp, [9, 12, 13, 19, 23, 24])])
+# create a list of the columns planned to be imputed 
+imputed_cols = ['Resistin', 'IL-6', 'IFNλ2/3', 'OPN','Cystatin C', 'D-dimer']
 
-# imputes missing values 
-imputed = ctf.fit_transform(df)
+# identify the imputed data based on the imputed columns
+data_to_impute = df[imputed_cols]
 
-# outputs to a new csv file 'imputed.csv'
-imputed_df = pd.DataFrame(imputed)
-imputed_df.to_csv("imputed2.csv", index = False)
+# impute data
+imputed_data = simp.fit_transform(data_to_impute)
+
+# assigned imputed data to the original df
+df[imputed_cols] = imputed_data
+
+# outputs dataframe as csv file
+df.to_csv("_imputed_data.csv", index = False)

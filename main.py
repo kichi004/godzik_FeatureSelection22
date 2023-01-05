@@ -1,6 +1,4 @@
-import featureSelector
-import loocv_rf_classifier
+import ordered_feature_selector
+import loocv_accuracy
 
-#featureSelector.featureSelection(2)
-#loocv_rf_classifier.loocv_rf_classification("important_features.csv")
-loocv_rf_classifier.loocv_rf_classification("imputed.csv")
+# print(loocv_accuracy.find_accuracy("_imputed_data.csv"))

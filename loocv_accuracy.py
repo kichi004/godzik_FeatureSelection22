@@ -5,25 +5,25 @@ import statistics
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import LeaveOneOut
 
-def loocv_rf_classification(file_name):
+def find_accuracy(file_name):
     # load dataset into pandas dataframe
     df = pd.read_csv(file_name)
 
     # determine and print default rate (percentage of the most common occurance)
-    counts = df['0'].value_counts()
+    counts = df['Group'].value_counts()
     highest_occurence = counts.max()
     default_rate = (highest_occurence / df.shape[0]) * 100
     # print(f'\nDefault Rate of Dataset: {default_rate: .2f}%')
 
     # split dataset into label columns and feature columns
-    feats = df.drop(['0'], axis = 1) # everything but the first column
-    labels = df['0'] # just the first column
+    feats = df.drop(['Group'], axis = 1) # everything but the first column
+    labels = df['Group'] # just the first column
 
     # Initialize leave-one-out object
     loo = LeaveOneOut()
 
     # Initialize random forest classifier 
-    rfc_model = RandomForestClassifier(n_estimators = 30)
+    rfc_model = RandomForestClassifier(n_estimators = 128)
 
     # Initialize a list to store the scores
     scores_list = []
