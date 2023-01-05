@@ -13,7 +13,7 @@ feats = df.drop(['0'], axis = 1) # everything but the first column
 labels = df['0'] # just the first column
 
 # define parameters for possible n_estimator values
-trees_parameters = {'n_estimators': [10, 20, 30, 40, 50, 60]} # returned 20, 45, 20, 35, 40, 35
+trees_parameters = {'n_estimators': [10, 20, 30, 40, 50, 60]}
 best_params_list = []
 
 # loops the following 
