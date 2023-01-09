@@ -1,36 +1,24 @@
-import statistics
 import loocv_accuracy
-import ordered_feature_selector
+import pandas as pd
+import numpy as np
+import statistics
 
-highest_accuracy_n = 1
-highest_accuracy_percentage = 0
+# load data
+full_sorted_df = pd.read_csv("_sorted_features.csv", index_col = False)
 
-# loop going through number of features
-for n in range (1, 25):
+for n in range(2, 26):
+    # select the first n columns
+    first_n = full_sorted_df.iloc[:,:n]
 
-    # list of accuracy results for the n number of top features
-    n_features_accuracies = []
+    # save the first n columns as csv
+    first_n.to_csv("first_n_columns.csv", index = False)
 
-    # arbitrary number of loops to get an average value
-    for k in range(100):
+    accuracy_list = []
 
-        # run featureSelector for "n" to get dataset with n top features
-        ordered_feature_selector.select_features(n)
+    for i in range(20):
+        accuracy_list.append(loocv_accuracy.find_accuracy("first_n_columns.csv"))
 
-        # get accuracy of the n-top-feature dataset classification and add to list
-        n_features_accuracies.append(loocv_accuracy.find_accuracy("_top_features.csv"))
-
-    # finds the average accuracy of the 30 trials for n top features selected
-    average_accuracy = statistics.mean(n_features_accuracies)
-    variance = statistics.stdev(n_features_accuracies)
-
-    # print accuracy of the trial into the terminal
-    print(f'Average accuracy of {n} top features trials was {average_accuracy:2f} (+/- {variance:2f})%')
-
-    if average_accuracy > highest_accuracy_percentage:
-        highest_accuracy_n = n
-        highest_accuracy_percentage = average_accuracy
-
-print(f'{highest_accuracy_n} number of features had the highest accuracy, with a value of {highest_accuracy_percentage:2f}%.')
-
+    accuracy = statistics.mean(accuracy_list)
+    std_dev = statistics.stdev(accuracy_list)
+    print(f"{n-1} top feature accuracy was {accuracy}% + {std_dev}")
 

@@ -5,3 +5,6 @@ _top_features.csv
 _current_iteration.csv
 _greedy_final.csv
 _greedy_final1.csv
+_available.csv
+_sorted_features.csv
+first_n_columns.csv
