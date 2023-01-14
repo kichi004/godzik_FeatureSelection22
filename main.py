@@ -1,16 +1,35 @@
-import loocv_accuracy
-import feature_importances_list
-import statistics
+import imputer
 
-# print(loocv_accuracy.find_accuracy("_greedy_final1.csv"))
-accuracy_list = []
+while True:
+    choice_input = input("Enter the value for the desired task.\n2. Impute Missing\n")
 
-for i in range(20):
-    accuracy_list.append(loocv_accuracy.find_accuracy("_greedy_final1.csv"))
+    if choice_input == '1':
+        # everything
+        print('hello')
+        break
 
-accuracy = statistics.mean(accuracy_list)
-std_dev = statistics.stdev(accuracy_list)
-print(f"accuracy was {accuracy}% +- {std_dev}")
+    if choice_input == '2':
 
-# names = ['Sex','Hispanic','Diabetes','Hypertension','Neutrophils','Monocytes','B cells','MHCII Monocytes','Resistin','IL-8','IP-10','IL-6','IFNλ2/3','Platelets','MHCII+Platelets','LCN2','Myoglobin','CRP','OPN','MPO','ICAM-1','VCAM-1','Cystatin C','D-dimer']
-# print(feature_importances_list.avg_feature_importances("_imputed_data.csv", names, 300))
+        # select file
+        file_input = input("Enter the name of the CSV file: ")
+
+        # select version number for columns imputed
+        version_number = input("Enter the version number of the file: ")
+
+        selected_columns = []
+        if version_number == '1' or version_number == 'v1':
+            selected_columns = ['Resistin', 'D-dimer']
+        elif version_number == '2' or version_number == 'v2':
+            selected_columns = ['Resistin']
+        
+        # adding spacing
+        print()
+
+        # call function / CHANGE IMPUTATION TYPE HERE
+        imputer.impute_missing_values(file_input, 'mean', selected_columns)
+        break
+
+    else:
+        print('An acceptable value was not entered.')
+        continue
+
