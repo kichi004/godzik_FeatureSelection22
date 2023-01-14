@@ -37,6 +37,9 @@ for i in range(24):
         iteration_accuracy = loocv_accuracy.find_accuracy("_current_iteration.csv")
         column_name = available.columns[n]
         print(f"{n+1}. {column_name}: {iteration_accuracy}%")
+        #if iteration_accuracy > 85:
+        #    print(complete_df.columns)
+        #    print(iteration_accuracy)
 
         # update highest_iteration accuracy and current_iteration list
         if iteration_accuracy >= highest_iteration_accuracy:
@@ -47,7 +50,7 @@ for i in range(24):
     if highest_iteration_accuracy >= highest_overall_accuracy:
         highest_overall_accuracy = highest_iteration_accuracy
         best_overall_features = best_iteration_features
-        print(f'Current best is {highest_overall_accuracy}%')
+        #print(f'Current best is {highest_overall_accuracy}%')
 
     selected = best_iteration_features
     last_column = selected.columns[-1]

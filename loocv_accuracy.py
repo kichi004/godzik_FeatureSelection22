@@ -3,6 +3,7 @@
 import pandas as pd
 import statistics
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import LeaveOneOut
 
 def find_accuracy(file_name):
@@ -23,7 +24,7 @@ def find_accuracy(file_name):
     loo = LeaveOneOut()
 
     # Initialize random forest classifier 
-    rfc_model = RandomForestClassifier(n_estimators = 128)
+    rfc_model = RandomForestClassifier(max_depth = None)
 
     # Initialize a list to store the scores
     scores_list = []
