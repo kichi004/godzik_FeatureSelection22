@@ -2,7 +2,7 @@ import accuracy_finder
 import pandas as pd
 import numpy as np
 
-def greedy_fw_search(file_name, print_threshold, max_depth):
+def greedy_fw_search(file_name, print_threshold = 101, max_depth = None):
     highest_overall_accuracy = 0
     best_overall_features = pd.DataFrame()
 

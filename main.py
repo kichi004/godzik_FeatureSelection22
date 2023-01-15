@@ -2,13 +2,39 @@ import imputer
 import accuracy_finder
 import greedy_feature_selector
 import importance_feature_selector
+import time
 
 while True:
-    choice_input = input("\nEnter the value for the desired task.\n2. Impute | 3. Accuracy | 4. Greedy Search | 5. Importances Search | 6. Get Importance Values | 7. Get Top N Features | 8. Visualize \n")
+    choice_input = input("\nEnter the value for the desired task.\n1. Everything | 2. Impute | 3. Accuracy | 4. Greedy Search | 5. Importances Search | 6. Get Importance Values | 7. Get Top N Features | 8. Visualize \n")
+    tic = time.perf_counter()
 
     if choice_input == '1': # everything >> imputes, greedy search and importance search
-        print('hello')
-        break
+        # select file
+        file_input = input("Enter the name of the CSV file: ")
+
+        # select version number for columns imputed
+        version_number = input("Enter the version number of the file: ")
+        selected_columns = []
+        if version_number == '0' or version_number == 'v0':
+            selected_columns = ['Resistin', 'IL-6', 'IFNλ2/3', 'OPN', 'Cystatin C', 'D-dimer']
+        elif version_number == '1' or version_number == 'v1':
+            selected_columns = ['Resistin', 'OPN', 'D-dimer']
+        elif version_number == '2' or version_number == 'v2':
+            selected_columns = ['Resistin']
+        
+        # adding spacing
+        print()
+
+        # calls every function
+        imputer.impute_missing_values(file_input, 'mean', selected_columns)
+        print()
+        greedy_feature_selector.greedy_fw_search("_imputed_data.csv", 85)
+        print()
+        highest_n = importance_feature_selector.best_n_features_search("_imputed_data.csv")
+        print()
+        importance_feature_selector.avg_feature_importances("_imputed_data.csv")
+        print()
+        importance_feature_selector.get_top_n_features("_sorted_by_importances", highest_n)
 
     elif choice_input == '2': # imputes file
         # select file
@@ -19,7 +45,7 @@ while True:
 
         selected_columns = []
         if version_number == '0' or version_number == 'v0':
-            selected_columns == ['Resistin', 'IL-6', 'IFNλ2/3', 'OPN', 'Cystatin C', 'D-dimer']
+            selected_columns = ['Resistin', 'IL-6', 'IFNλ2/3', 'OPN', 'Cystatin C', 'D-dimer']
         elif version_number == '1' or version_number == 'v1':
             selected_columns = ['Resistin', 'OPN', 'D-dimer']
         elif version_number == '2' or version_number == 'v2':
@@ -121,6 +147,9 @@ while True:
         break
 
     elif choice_input == '7': # get the top n features
+        # select file
+        file_input = input("Enter the name of the CSV file: ")
+
         # select number of features
         feature_count_input = input("Enter the number of top features you would like to retrieve: ")
         feature_count_input = int(feature_count_input)
@@ -129,10 +158,13 @@ while True:
         print()
 
         # call function
-        importance_feature_selector.get_top_n_features(feature_count_input)
+        importance_feature_selector.get_top_n_features(file_input, feature_count_input)
         break
 
     else:
         print('An acceptable value was not entered.')
         continue
+
+toc = time.perf_counter()
+print(f"Time elapsed: {toc - tic:.1f} seconds.")
 

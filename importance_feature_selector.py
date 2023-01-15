@@ -100,8 +100,6 @@ def best_n_features_search(file_name, trials_input = 20, depth_input = None, ski
         # select the first n columns
         first_n = full_sorted_df.iloc[:,:n]
 
-        print(first_n)
-
         feats = first_n.drop(['Group'], axis = 1) # everything but the first column
         labels = first_n['Group'] # just the first column
 
@@ -122,10 +120,11 @@ def best_n_features_search(file_name, trials_input = 20, depth_input = None, ski
     first_n_best = full_sorted_df.iloc[:,:highest_n]
     print(f"\nThe highest accuracy set had {highest_n-1} features with {highest_n_accuracy:3f}% accuracy.\n")
     print(first_n_best.head())
+    return highest_n
 
-def get_top_n_features(n):
+def get_top_n_features(file_name, n):
     # read in data
-    full_sorted_df = pd.read_csv("_sorted_by_importances.csv", index_col = False)
+    full_sorted_df = pd.read_csv(file_name, index_col = False)
 
     # retrieve a dataframe of the first n+1 features
     first_n = full_sorted_df.iloc[:,:n+1]
@@ -134,6 +133,9 @@ def get_top_n_features(n):
     first_n.to_csv("_top_X_features.csv", index = False)
     print(first_n.head())
     print(f"\nThe top {n} features were outputted as \'_top_X_features.csv\'")
+
+    # find accuracy
+    accuracy_finder.find_accuracy_trials("_top_X_features.csv")
 
 
 
