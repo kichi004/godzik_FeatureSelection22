@@ -73,15 +73,14 @@ def find_accuracy_split(feats, labels, depth_input = None):
     return statistics.mean(scores_list)*100
 
 def find_accuracy_trials(file_name, trials = 20, depth_input = None):
-    # list to store accuracy scores
-    accuracy_list = []
-
     # load dataset into pandas dataframe
     df = pd.read_csv(file_name)
 
     # split dataset into label columns and feature columns
     feats = df.drop(['Group'], axis = 1) # everything but the first column
     labels = df['Group'] # just the first column
+
+    accuracy_list = []
 
     # run multiple trials
     for i in range(trials):

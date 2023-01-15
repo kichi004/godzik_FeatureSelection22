@@ -1,15 +1,16 @@
 import imputer
 import accuracy_finder
 import greedy_feature_selector
+import importance_feature_selector
 
 while True:
-    choice_input = input("\nEnter the value for the desired task.\n2. Impute | 3. Accuracy | 4. Greedy Search | 5. Importances | 6. Importance Search | 7. Visualize\n")
+    choice_input = input("\nEnter the value for the desired task.\n2. Impute | 3. Accuracy | 4. Greedy Search | 5. Importances Search | 6. Get Importance Values | 7. Get Top N Features | 8. Visualize \n")
 
     if choice_input == '1': # everything >> imputes, greedy search and importance search
         print('hello')
         break
 
-    if choice_input == '2': # imputes file
+    elif choice_input == '2': # imputes file
         # select file
         file_input = input("Enter the name of the CSV file: ")
 
@@ -35,12 +36,12 @@ while True:
 
         break
 
-    if choice_input == '3': # find accuracy
+    elif choice_input == '3': # find accuracy
         # select file
         file_input = input("Enter the name of the CSV file: ")
 
         # select number of trials
-        trial_input = input("Enter the number of trials to conduct: ")
+        trial_input = input("Enter the number of trials to conduct (rec 20): ")
         trial_input = int(trial_input)
 
         # select max depth
@@ -56,7 +57,7 @@ while True:
         accuracy_finder.find_accuracy_trials(file_input, trial_input, depth_input)
         break
 
-    if choice_input == '4': # greedy forward selection
+    elif choice_input == '4': # greedy forward selection
         # select file
         file_input = input("Enter the name of the CSV file: ")
 
@@ -75,6 +76,60 @@ while True:
 
         # call function
         greedy_feature_selector.greedy_fw_search(file_input, threshold_input, depth_input)
+        break
+
+    elif choice_input == '5': # search by feature importance
+        # select file
+        file_input = input("Enter the name of the CSV file: ")
+
+        # select number of trials
+        trial_input = input("Enter the number of trials to conduct (rec = 20): ")
+        trial_input = int(trial_input)
+
+        # select max depth
+        depth_input = input("Enter the maximum depth for the classifier (enter '0' for no maximum): ")
+        depth_input = int(depth_input)
+        if depth_input == 0:
+            depth_input = None
+        
+        skip_input = input("Enter '1' if you would like to skip the initial sorting process: ")
+        if skip_input == '1':
+            skip_input = True
+        else:
+            skip_input = False
+
+        # add spacing
+        print()
+
+        # call function
+        importance_feature_selector.best_n_features_search(file_input, trial_input, depth_input, skip_input)
+        break
+
+    elif choice_input == '6': # calculate and list importance values of the features
+        # select file
+        file_input = input("Enter the name of the CSV file: ")
+
+        # select number of trials
+        trial_input = input("Enter the number of trials to conduct (rec = 100): ")
+        trial_input = int(trial_input)
+
+        # add spacing
+        print()
+
+        # call function
+        importance_feature_selector.avg_feature_importances(file_input, trial_input)
+        break
+
+    elif choice_input == '7': # get the top n features
+        # select number of features
+        feature_count_input = input("Enter the number of top features you would like to retrieve: ")
+        feature_count_input = int(feature_count_input)
+
+        # add spacing
+        print()
+
+        # call function
+        importance_feature_selector.get_top_n_features(feature_count_input)
         break
 
     else:

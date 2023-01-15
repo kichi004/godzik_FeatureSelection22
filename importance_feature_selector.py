@@ -41,10 +41,10 @@ def sorted_df(file_name, n = 500, depth_input = None):
 
     sorted_df.insert(0, labels.name, labels)
 
-    sorted_df.to_csv("_sorted_features.csv", index = False)
+    sorted_df.to_csv("_sorted_by_importances.csv", index = False)
 
 # print importances list + get top n
-def avg_feature_importances(file_name, feature_names, trials = 100):
+def avg_feature_importances(file_name, trials = 100):
     # initialize empty list to store importances
     importances_list = []
 
@@ -76,21 +76,31 @@ def avg_feature_importances(file_name, feature_names, trials = 100):
     # Compute mean of importances
     mean_importances = np.mean(importances_array, axis=0)
 
+    # get names of every feature
+    feature_names = list(df.columns.values)
+    feature_names.pop(0)
+
     for name, importance in zip(feature_names, mean_importances):
         print(f'{name}: {importance:.3f}')
+    print()
 
 # search through top n's function
-def best_n_features_search(file_name, trials_input = 20, depth_input = None):
+def best_n_features_search(file_name, trials_input = 20, depth_input = None, skip = False):
     # call sort function
-    sorted_df(file_name, 500, depth_input)
+    if (not skip):
+        sorted_df(file_name, 500, depth_input)
 
     # load data
-    full_sorted_df = pd.read_csv("_sorted_features.csv", index_col = False)
+    full_sorted_df = pd.read_csv("_sorted_by_importances.csv", index_col = False)
     width = len(full_sorted_df.columns)
+    highest_n = 2
+    highest_n_accuracy = 0
 
     for n in range(2, width + 2):
         # select the first n columns
         first_n = full_sorted_df.iloc[:,:n]
+
+        print(first_n)
 
         feats = first_n.drop(['Group'], axis = 1) # everything but the first column
         labels = first_n['Group'] # just the first column
@@ -98,9 +108,33 @@ def best_n_features_search(file_name, trials_input = 20, depth_input = None):
         accuracy_list = []
 
         for i in range(trials_input):
-            accuracy_list.append(accuracy_finder.find_accuracy(feats, labels, depth_input))
+            accuracy_list.append(accuracy_finder.find_accuracy_split(feats, labels, depth_input))
 
         accuracy = statistics.mean(accuracy_list)
         std_dev = statistics.stdev(accuracy_list)
-        print(f"Accuracy for {n-1} features: {accuracy} +- {std_dev}%")
+
+        print(f"Accuracy for {n-1} features: {accuracy:3f} +- {std_dev:3f}%")
+
+        if accuracy > highest_n_accuracy:
+            highest_n = n
+            highest_n_accuracy = accuracy
+    
+    first_n_best = full_sorted_df.iloc[:,:highest_n]
+    print(f"\nThe highest accuracy set had {highest_n-1} features with {highest_n_accuracy:3f}% accuracy.\n")
+    print(first_n_best.head())
+
+def get_top_n_features(n):
+    # read in data
+    full_sorted_df = pd.read_csv("_sorted_by_importances.csv", index_col = False)
+
+    # retrieve a dataframe of the first n+1 features
+    first_n = full_sorted_df.iloc[:,:n+1]
+
+    # output as csv
+    first_n.to_csv("_top_X_features.csv", index = False)
+    print(first_n.head())
+    print(f"\nThe top {n} features were outputted as \'_top_X_features.csv\'")
+
+
+
 
