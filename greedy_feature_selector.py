@@ -63,7 +63,7 @@ def greedy_fw_search(file_name, print_threshold, max_depth):
     # final output 
     print("Highest Accuracy Dataset Found:\n")
     final = pd.concat([labs, best_overall_features], axis = 1)
-    final.to_csv("_greedy_search_result.csv", index = False)
+    final.to_csv("_greedy_select_result.csv", index = False)
     print(final.head())
-    accuracy_finder.find_accuracy_trials("_greedy_search_result.csv", 20, max_depth)
+    accuracy_finder.find_accuracy_trials("_greedy_select_result.csv", 20, max_depth)
     

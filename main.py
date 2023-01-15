@@ -1,6 +1,6 @@
 import imputer
 import accuracy_finder
-import greedy_feature_searcher
+import greedy_feature_selector
 
 while True:
     choice_input = input("\nEnter the value for the desired task.\n2. Impute | 3. Accuracy | 4. Greedy Search | 5. Importances | 6. Importance Search | 7. Visualize\n")
@@ -74,7 +74,7 @@ while True:
         print()
 
         # call function
-        greedy_feature_searcher.greedy_fw_search(file_input, threshold_input, depth_input)
+        greedy_feature_selector.greedy_fw_search(file_input, threshold_input, depth_input)
         break
 
     else:
