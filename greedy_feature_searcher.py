@@ -43,15 +43,15 @@ def greedy_fw_search(file_name, print_threshold, max_depth):
             if iteration_accuracy > print_threshold:
                 complete_df = pd.concat([labs, current_df], axis = 1)
                 print(complete_df.columns, end = "")
-                print(f" {iteration_accuracy: .2f}%")
+                print(f" {iteration_accuracy: .3f}%")
 
             # update highest_iteration accuracy and current_iteration list
-            if iteration_accuracy >= highest_iteration_accuracy:
+            if iteration_accuracy > highest_iteration_accuracy:
                 best_iteration_features = current_df
                 highest_iteration_accuracy = iteration_accuracy
         
         # compare to highest_overall_accuracy and update
-        if highest_iteration_accuracy >= highest_overall_accuracy:
+        if highest_iteration_accuracy > highest_overall_accuracy:
             highest_overall_accuracy = highest_iteration_accuracy
             best_overall_features = best_iteration_features
 
