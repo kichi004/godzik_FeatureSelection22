@@ -4,6 +4,7 @@ import pandas as pd
 import statistics
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import LeaveOneOut
+from sklearn.tree import DecisionTreeClassifier
 
 def find_accuracy(file_name, depth_input = None):
     # load dataset into pandas dataframe
