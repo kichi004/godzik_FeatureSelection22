@@ -1,16 +1,170 @@
-import loocv_accuracy
-import feature_importances_list
-import statistics
+import imputer
+import accuracy_finder
+import greedy_feature_selector
+import importance_feature_selector
+import time
 
-# print(loocv_accuracy.find_accuracy("_greedy_final1.csv"))
-accuracy_list = []
+while True:
+    choice_input = input("\nEnter the value for the desired task.\n1. Everything | 2. Impute | 3. Accuracy | 4. Greedy Search | 5. Importances Search | 6. Get Importance Values | 7. Get Top N Features | 8. Visualize \n")
+    tic = time.perf_counter()
 
-for i in range(20):
-    accuracy_list.append(loocv_accuracy.find_accuracy("_greedy_final1.csv"))
+    if choice_input == '1': # everything >> imputes, greedy search and importance search
+        # select file
+        file_input = input("Enter the name of the CSV file: ")
 
-accuracy = statistics.mean(accuracy_list)
-std_dev = statistics.stdev(accuracy_list)
-print(f"accuracy was {accuracy}% +- {std_dev}")
+        # select version number for columns imputed
+        version_number = input("Enter the version number of the file: ")
+        selected_columns = []
+        if version_number == '0' or version_number == 'v0':
+            selected_columns = ['Resistin', 'IL-6', 'IFNλ2/3', 'OPN', 'Cystatin C', 'D-dimer']
+        elif version_number == '1' or version_number == 'v1':
+            selected_columns = ['Resistin', 'OPN', 'D-dimer']
+        elif version_number == '2' or version_number == 'v2':
+            selected_columns = ['Resistin']
+        
+        # adding spacing
+        print()
 
-# names = ['Sex','Hispanic','Diabetes','Hypertension','Neutrophils','Monocytes','B cells','MHCII Monocytes','Resistin','IL-8','IP-10','IL-6','IFNλ2/3','Platelets','MHCII+Platelets','LCN2','Myoglobin','CRP','OPN','MPO','ICAM-1','VCAM-1','Cystatin C','D-dimer']
-# print(feature_importances_list.avg_feature_importances("_imputed_data.csv", names, 300))
+        # calls every function
+        imputer.impute_missing_values(file_input, 'mean', selected_columns)
+        print()
+        greedy_feature_selector.greedy_fw_search("_imputed_data.csv", 85)
+        print()
+        highest_n = importance_feature_selector.best_n_features_search("_imputed_data.csv")
+        print()
+        importance_feature_selector.avg_feature_importances("_imputed_data.csv")
+        print()
+        importance_feature_selector.get_top_n_features("_sorted_by_importances", highest_n)
+
+    elif choice_input == '2': # imputes file
+        # select file
+        file_input = input("Enter the name of the CSV file: ")
+
+        # select version number for columns imputed
+        version_number = input("Enter the version number of the file: ")
+
+        selected_columns = []
+        if version_number == '0' or version_number == 'v0':
+            selected_columns = ['Resistin', 'IL-6', 'IFNλ2/3', 'OPN', 'Cystatin C', 'D-dimer']
+        elif version_number == '1' or version_number == 'v1':
+            selected_columns = ['Resistin', 'OPN', 'D-dimer']
+        elif version_number == '2' or version_number == 'v2':
+            selected_columns = ['Resistin']
+        
+        # adding spacing
+        print()
+
+        # call function / CHANGE IMPUTATION TYPE HERE
+        imputer.impute_missing_values(file_input, 'mean', selected_columns)
+
+        # print success 
+        print(f"\nMissing values of {file_input} were successfully imputed and saved as \'_imputed_data.csv\'\n")
+
+        break
+
+    elif choice_input == '3': # find accuracy
+        # select file
+        file_input = input("Enter the name of the CSV file: ")
+
+        # select number of trials
+        trial_input = input("Enter the number of trials to conduct (rec 20): ")
+        trial_input = int(trial_input)
+
+        # select max depth
+        depth_input = input("Enter the maximum depth for the classifier (enter '0' for no maximum): ")
+        depth_input = int(depth_input)
+        if depth_input == 0:
+            depth_input = None
+
+        # add spacing
+        print()
+
+        # call function
+        accuracy_finder.find_accuracy_trials(file_input, trial_input, depth_input)
+        break
+
+    elif choice_input == '4': # greedy forward selection
+        # select file
+        file_input = input("Enter the name of the CSV file: ")
+
+        # select printing threshold
+        threshold_input = input("Print any combinations of accuracy higher than what value?: ")
+        threshold_input = int(threshold_input)
+        
+        # select max depth
+        depth_input = input("Enter the maximum depth for the classifier (enter '0' for no maximum): ")
+        depth_input = int(depth_input)
+        if depth_input == 0:
+            depth_input = None
+
+        # add spacing
+        print()
+
+        # call function
+        greedy_feature_selector.greedy_fw_search(file_input, threshold_input, depth_input)
+        break
+
+    elif choice_input == '5': # search by feature importance
+        # select file
+        file_input = input("Enter the name of the CSV file: ")
+
+        # select number of trials
+        trial_input = input("Enter the number of trials to conduct (rec = 20): ")
+        trial_input = int(trial_input)
+
+        # select max depth
+        depth_input = input("Enter the maximum depth for the classifier (enter '0' for no maximum): ")
+        depth_input = int(depth_input)
+        if depth_input == 0:
+            depth_input = None
+        
+        skip_input = input("Enter '1' if you would like to skip the initial sorting process: ")
+        if skip_input == '1':
+            skip_input = True
+        else:
+            skip_input = False
+
+        # add spacing
+        print()
+
+        # call function
+        importance_feature_selector.best_n_features_search(file_input, trial_input, depth_input, skip_input)
+        break
+
+    elif choice_input == '6': # calculate and list importance values of the features
+        # select file
+        file_input = input("Enter the name of the CSV file: ")
+
+        # select number of trials
+        trial_input = input("Enter the number of trials to conduct (rec = 100): ")
+        trial_input = int(trial_input)
+
+        # add spacing
+        print()
+
+        # call function
+        importance_feature_selector.avg_feature_importances(file_input, trial_input)
+        break
+
+    elif choice_input == '7': # get the top n features
+        # select file
+        file_input = input("Enter the name of the CSV file: ")
+
+        # select number of features
+        feature_count_input = input("Enter the number of top features you would like to retrieve: ")
+        feature_count_input = int(feature_count_input)
+
+        # add spacing
+        print()
+
+        # call function
+        importance_feature_selector.get_top_n_features(file_input, feature_count_input)
+        break
+
+    else:
+        print('An acceptable value was not entered.')
+        continue
+
+toc = time.perf_counter()
+print(f"Time elapsed: {toc - tic:.1f} seconds.")
+

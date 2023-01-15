@@ -1,10 +1,8 @@
 /env
+
+_survival_data_v1.csv
 _imputed_data.csv
-_survival_data_initial.csv
-_top_features.csv
-_current_iteration.csv
-_greedy_final.csv
-_greedy_final1.csv
-_available.csv
-_sorted_features.csv
-first_n_columns.csv
+_greedy_select_result.csv
+_survival_data_v0.csv
+_sorted_by_importances.csv
+_top_X_features.csv
