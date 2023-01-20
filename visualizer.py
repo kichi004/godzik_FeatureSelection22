@@ -23,10 +23,10 @@ def visualize_tree_classifier(file_name, output_name, depth_input = None):
     # get feature_names
     feature_names = list(df.columns.values)
     feature_names.pop(0)
-    label_names = ['Survival', 'Fatality']
+    label_names = ['Fatality', 'Survival']
 
     # export as dot file
-    export_graphviz(rfc, out_file = 'tree.dot', feature_names = feature_names, class_names = label_names, rounded = True, proportion = False, precision = 2, filled = True)
+    export_graphviz(rfc, out_file = 'tree.dot', feature_names = feature_names, class_names = label_names, impurity = False, rounded = True, proportion = False, precision = 2, filled = True)
 
     # convert to png file
     (graph,) = graph_from_dot_file('tree.dot')
@@ -55,7 +55,7 @@ def visualize_forest_classifier(file_name, output_name, depth_input = None):
     label_names = ['Survival', 'Fatality']
 
     # export as dot file
-    export_graphviz(estimator, out_file = 'tree.dot', feature_names = feature_names, class_names = label_names, rounded = True, proportion = False, precision = 2, filled = True)
+    export_graphviz(estimator, out_file = 'tree.dot', feature_names = feature_names, class_names = label_names, impurity = False, rounded = True, proportion = False, precision = 2, filled = True)
 
     # convert to png file
     (graph,) = graph_from_dot_file('tree.dot')
