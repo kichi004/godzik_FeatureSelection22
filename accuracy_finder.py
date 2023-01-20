@@ -4,6 +4,7 @@ import pandas as pd
 import statistics
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import LeaveOneOut
+from sklearn.tree import DecisionTreeClassifier
 
 def find_accuracy(file_name, depth_input = None):
     # load dataset into pandas dataframe
@@ -17,7 +18,7 @@ def find_accuracy(file_name, depth_input = None):
     loo = LeaveOneOut()
 
     # Initialize random forest classifier 
-    rfc_model = RandomForestClassifier(max_depth = depth_input)
+    rfc_model = RandomForestClassifier(max_depth = depth_input, n_estimators = 128)
 
     # Initialize a list to store the scores
     scores_list = []
@@ -47,7 +48,7 @@ def find_accuracy_split(feats, labels, depth_input = None):
     loo = LeaveOneOut()
 
     # Initialize random forest classifier 
-    rfc_model = RandomForestClassifier(max_depth = depth_input)
+    rfc_model = RandomForestClassifier(max_depth = depth_input, n_estimators = 128)
 
     # Initialize a list to store the scores
     scores_list = []
