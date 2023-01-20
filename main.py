@@ -14,8 +14,8 @@ while True:
         # select file
         file_input = input("Enter the name of the CSV file: ")
 
-        tree_visual_name = "tree_visual_"
-        forest_visual_name = "forest_visual_"
+        tree_visual_name = "greedy_tree_visual_"
+        forest_visual_name = "nonselected_tree_visual_"
 
         # select version number for columns imputed
         version_number = input("Enter the version number of the file: ")
@@ -33,8 +33,17 @@ while True:
             tree_visual_name = tree_visual_name + "v2.png"
             forest_visual_name = forest_visual_name + "v2.png"
         elif version_number == '3' or version_number == 'v3':
+            selected_columns = ['Resistin']
             tree_visual_name = tree_visual_name + "v3.png"
             forest_visual_name = forest_visual_name + "v3.png"
+        elif version_number == 'c' or version_number == 'clinical':
+            selected_columns = ['D-dimer']
+            tree_visual_name = tree_visual_name + "clinical.png"
+            forest_visual_name = forest_visual_name + "clinical.png"
+        elif version_number == 'm' or version_number == 'molecular':
+            selected_columns = ['Resistin', 'OPN']
+            tree_visual_name = tree_visual_name + "molecular.png"
+            forest_visual_name = forest_visual_name + "molecular.png"
         
         # adding spacing
         print()
@@ -42,16 +51,16 @@ while True:
         # calls every function
         imputer.impute_missing_values(file_input, 'mean', selected_columns)
         print()
-        #greedy_feature_selector.greedy_fw_search("_imputed_data.csv", 85)
+        highest_n = importance_feature_selector.best_n_features_search("_imputed_data.csv")
         print()
-        #highest_n = importance_feature_selector.best_n_features_search("_imputed_data.csv")
+        importance_feature_selector.avg_feature_importances("_imputed_data.csv")
         print()
-        #importance_feature_selector.avg_feature_importances("_imputed_data.csv")
+        importance_feature_selector.get_top_n_features("_sorted_by_importances.csv", highest_n-1)
         print()
-        #importance_feature_selector.get_top_n_features("_sorted_by_importances", highest_n)
+        greedy_feature_selector.greedy_fw_search("_sorted_by_importances.csv", 60)
         print()
-        visualizer.visualize_tree_classifier("_imputed_data.csv", tree_visual_name)
-        visualizer.visualize_forest_classifier("_imputed_data.csv", forest_visual_name)
+        visualizer.visualize_tree_classifier("_greedy_select_result.csv", tree_visual_name)
+        visualizer.visualize_tree_classifier("_imputed_data.csv", forest_visual_name)
         break
 
     elif choice_input == '2': # imputes file
@@ -230,7 +239,7 @@ while True:
         df = pd.read_csv("_imputed_data.csv")
 
         # select custom set of features / MODIFY HERE
-        custom_df = df[['Group', 'LCN2', 'Diabetes', 'Monocytes', 'Neutrophils']]
+        custom_df = df[['Group', 'LCN2', 'Diabetes', 'Monocytes']]
 
         # convert to csv file
         custom_df.to_csv("custom.csv", index = False)

@@ -41,8 +41,7 @@ def greedy_fw_search(file_name, print_threshold = 101, max_depth = None):
 
             # print if the iteraction_accuracy is higher than the threshold
             if iteration_accuracy > print_threshold:
-                complete_df = pd.concat([labs, current_df], axis = 1)
-                print(complete_df.columns, end = "")
+                print(current_df.columns, end = "")
                 print(f" {iteration_accuracy: .3f}%")
 
             # update highest_iteration accuracy and current_iteration list
@@ -61,7 +60,7 @@ def greedy_fw_search(file_name, print_threshold = 101, max_depth = None):
         available = available.drop(labels = last_column, axis = 1)
 
     # final output 
-    print("Highest Accuracy Dataset Found:\n")
+    print("\nHighest Accuracy Dataset Found:")
     final = pd.concat([labs, best_overall_features], axis = 1)
     final.to_csv("_greedy_select_result.csv", index = False)
     print(final.head())
