@@ -10,6 +10,7 @@ _imputed_data.csv
 _greedy_select_result.csv
 _sorted_by_importances.csv
 _top_X_features.csv
+_clinic_parameters.csv
 custom.csv
 
 tree.dot

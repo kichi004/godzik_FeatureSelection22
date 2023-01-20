@@ -7,7 +7,7 @@ import pandas as pd
 import time
 
 while True:
-    choice_input = input("\nEnter the value for the desired task.\n1. Everything | 2. Impute | 3. Accuracy | 4. Greedy Search | 5. Importances Search | \n6. Get Importance Values | 7. Get Top N Features | 8. Visualize Tree | 9. Visualize Forest |\n")
+    choice_input = input("\nEnter the value for the desired task.\n1. Everything | 2. Impute | 3. Accuracy | 4. Greedy Search | 5. Importances Search | \n6. Get Importance Values | 7. Get Top N Features | 8. Visualize Tree | 9. Visualize Forest | 10. Custom | 11. Get Scores \n")
     tic = time.perf_counter()
 
     if choice_input == '1': # everything >> imputes, greedy search and importance search
@@ -16,6 +16,7 @@ while True:
 
         tree_visual_name = "greedy_tree_visual_"
         forest_visual_name = "nonselected_tree_visual_"
+        top_feature_visual_name = "top_feature_tree_visual_"
 
         # select version number for columns imputed
         version_number = input("Enter the version number of the file: ")
@@ -24,26 +25,37 @@ while True:
             selected_columns = ['Resistin', 'IL-6', 'IFNλ2/3', 'OPN', 'Cystatin C', 'D-dimer']
             tree_visual_name = tree_visual_name + "v0.png"
             forest_visual_name = forest_visual_name + "v0.png"
+            top_feature_visual_name = top_feature_visual_name + "v0.png"
         elif version_number == '1' or version_number == 'v1':
             selected_columns = ['Resistin', 'OPN', 'D-dimer']
             tree_visual_name = tree_visual_name + "v1.png"
             forest_visual_name = forest_visual_name + "v1.png"
+            top_feature_visual_name = top_feature_visual_name + "v1.png"
         elif version_number == '2' or version_number == 'v2':
             selected_columns = ['Resistin', 'OPN']
             tree_visual_name = tree_visual_name + "v2.png"
             forest_visual_name = forest_visual_name + "v2.png"
+            top_feature_visual_name = top_feature_visual_name + "v2.png"
         elif version_number == '3' or version_number == 'v3':
             selected_columns = ['Resistin']
             tree_visual_name = tree_visual_name + "v3.png"
             forest_visual_name = forest_visual_name + "v3.png"
+            top_feature_visual_name = top_feature_visual_name + "v3.png"
         elif version_number == 'c' or version_number == 'clinical':
             selected_columns = ['D-dimer']
             tree_visual_name = tree_visual_name + "clinical.png"
             forest_visual_name = forest_visual_name + "clinical.png"
+            top_feature_visual_name = top_feature_visual_name + "clinical.png"
         elif version_number == 'm' or version_number == 'molecular':
             selected_columns = ['Resistin', 'OPN']
             tree_visual_name = tree_visual_name + "molecular.png"
             forest_visual_name = forest_visual_name + "molecular.png"
+            top_feature_visual_name = top_feature_visual_name + "molecular.png"
+        elif version_number == 'clinic':
+            selected_columns = ['SBP', 'DBP', 'AST', 'ALT', 'LDH', 'CRP', 'D-dimer']
+            tree_visual_name = tree_visual_name + "clinic.png"
+            forest_visual_name = forest_visual_name + "clinic.png"
+            top_feature_visual_name = top_feature_visual_name + "clinic.png"
         
         # adding spacing
         print()
@@ -61,6 +73,9 @@ while True:
         print()
         visualizer.visualize_tree_classifier("_greedy_select_result.csv", tree_visual_name)
         visualizer.visualize_tree_classifier("_imputed_data.csv", forest_visual_name)
+        print()
+        accuracy_finder.find_scores("_greedy_select_result.csv")
+        accuracy_finder.find_scores("_imputed_data.csv")
         break
 
     elif choice_input == '2': # imputes file
@@ -76,7 +91,15 @@ while True:
         elif version_number == '1' or version_number == 'v1':
             selected_columns = ['Resistin', 'OPN', 'D-dimer']
         elif version_number == '2' or version_number == 'v2':
+            selected_columns = ['Resistin', 'OPN']
+        elif version_number == '3' or version_number == 'v3':
             selected_columns = ['Resistin']
+        elif version_number == 'c' or version_number == 'clinical':
+            selected_columns = ['D-dimer']
+        elif version_number == 'm' or version_number == 'molecular':
+            selected_columns = ['Resistin', 'OPN']
+        elif version_number == 'clinic':
+            selected_columns = ['SBP', 'DBP', 'AST', 'ALT', 'LDH', 'CRP', 'D-dimer']
         
         # adding spacing
         print()
@@ -246,6 +269,14 @@ while True:
 
         # call trials accuracy finder
         accuracy_finder.find_accuracy_trials("custom.csv", 20, depth_input)
+        break
+
+    elif choice_input == '11': # f1 score, precision, accuracy
+        # select file
+        file_input = input("Enter the name of the CSV file: ")
+
+        # call function
+        accuracy_finder.find_scores(file_input)
         break
 
     else:

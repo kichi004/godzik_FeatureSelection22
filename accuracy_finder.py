@@ -2,8 +2,10 @@
 
 import pandas as pd
 import statistics
+import matplotlib.pyplot as plt
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import LeaveOneOut
+from sklearn.metrics import classification_report
 from sklearn.tree import DecisionTreeClassifier
 
 def find_accuracy(file_name, depth_input = None):
@@ -92,3 +94,29 @@ def find_accuracy_trials(file_name, trials = 20, depth_input = None):
     std_dev = statistics.stdev(accuracy_list)
 
     print(f"Accuracy of {file_name} was {accuracy} +- {std_dev}%\n")
+
+def find_scores(file_name):
+    # load dataset into pandas dataframe
+    df = pd.read_csv(file_name)
+
+    # split dataset into label columns and feature columns
+    feats = df.drop(['Group'], axis = 1) # everything but the first column
+    labels = df['Group'] # just the first column
+
+    # generate random forest classifier
+    rfc = RandomForestClassifier(random_state = 1)
+    loo = LeaveOneOut()
+
+    label_true = []
+    label_pred = []
+
+    for train_index, test_index in loo.split(feats):
+        feats_train, feats_test = feats.iloc[train_index], feats.iloc[test_index]
+        labels_train, labels_test = labels.iloc[train_index], labels.iloc[test_index]
+        rfc.fit(feats_train, labels_train)
+        
+        label_pred.append(rfc.predict(feats_test))
+        label_true.append(labels_test)
+
+    print(f"{file_name} Classification Report: ")
+    print(classification_report(label_true, label_pred))
