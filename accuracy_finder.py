@@ -94,6 +94,19 @@ def find_accuracy_trials(file_name, trials = 20, depth_input = None):
     std_dev = statistics.stdev(accuracy_list)
 
     print(f"Accuracy of {file_name} was {accuracy} +- {std_dev}%\n")
+    return accuracy
+
+def find_accuracy_trials_split(feats, labels, trials = 10, depth_input = None):
+    accuracy_list = []
+
+    # run multiple trials
+    for i in range(trials):
+        accuracy_list.append(find_accuracy_split(feats, labels, depth_input))
+    
+    # calculate
+    accuracy = statistics.mean(accuracy_list)
+
+    return accuracy
 
 def find_scores(file_name):
     # load dataset into pandas dataframe
@@ -104,19 +117,20 @@ def find_scores(file_name):
     labels = df['Group'] # just the first column
 
     # generate random forest classifier
-    rfc = RandomForestClassifier(random_state = 1)
+    rfc = RandomForestClassifier()
     loo = LeaveOneOut()
 
     label_true = []
     label_pred = []
 
-    for train_index, test_index in loo.split(feats):
-        feats_train, feats_test = feats.iloc[train_index], feats.iloc[test_index]
-        labels_train, labels_test = labels.iloc[train_index], labels.iloc[test_index]
-        rfc.fit(feats_train, labels_train)
-        
-        label_pred.append(rfc.predict(feats_test))
-        label_true.append(labels_test)
+    for i in range(100):
+        for train_index, test_index in loo.split(feats):
+            feats_train, feats_test = feats.iloc[train_index], feats.iloc[test_index]
+            labels_train, labels_test = labels.iloc[train_index], labels.iloc[test_index]
+            rfc.fit(feats_train, labels_train)
+            
+            label_pred.append(rfc.predict(feats_test))
+            label_true.append(labels_test)
 
     print(f"{file_name} Classification Report: ")
     print(classification_report(label_true, label_pred))
