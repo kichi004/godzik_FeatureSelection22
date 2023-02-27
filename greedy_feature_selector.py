@@ -33,7 +33,7 @@ def greedy_fw_search(file_name, print_threshold = 101, max_depth = None):
             current_df = pd.concat([selected, available.iloc[:, n]], axis=1)
 
             # output and get accuracy of current iteration
-            iteration_accuracy = accuracy_finder.find_accuracy_split(current_df, labs, max_depth)
+            iteration_accuracy = accuracy_finder.find_accuracy_trials_split(current_df, labs, 10, max_depth)
             column_name = available.columns[n]
             
             # prints whatever feature was added and the iteration accuracy

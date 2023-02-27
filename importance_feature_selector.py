@@ -88,7 +88,7 @@ def avg_feature_importances(file_name, trials = 100):
 def best_n_features_search(file_name, trials_input = 20, depth_input = None, skip = False):
     # call sort function
     if (not skip):
-        sorted_df(file_name, 500, depth_input)
+        sorted_df(file_name, 100, depth_input)
 
     # load data
     full_sorted_df = pd.read_csv("_sorted_by_importances.csv", index_col = False)
@@ -96,10 +96,10 @@ def best_n_features_search(file_name, trials_input = 20, depth_input = None, ski
     highest_n = 2
     highest_n_accuracy = 0
 
-    for n in range(2, width + 2):
+    for n in range(2, width + 1):
         # select the first n columns
         first_n = full_sorted_df.iloc[:,:n]
-
+        # print(first_n.head())
         feats = first_n.drop(['Group'], axis = 1) # everything but the first column
         labels = first_n['Group'] # just the first column
 
@@ -135,7 +135,7 @@ def get_top_n_features(file_name, n):
     print(f"\nThe top {n} features were outputted as \'_top_X_features.csv\'")
 
     # find accuracy
-    accuracy_finder.find_accuracy_trials("_top_X_features.csv")
+    return accuracy_finder.find_accuracy_trials("_top_X_features.csv")
 
 
 
