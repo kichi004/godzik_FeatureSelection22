@@ -201,11 +201,20 @@ while True:
         if depth_input == 0:
             depth_input = None
 
+        # select splitting method
+        split_input = input("Enter the splitting method for the decision tree classifier. '0' for gini, '1' for 'entropy', '2' for 'log_loss'")
+        if split_input == 1:
+            split_input = 'entropy'
+        if split_input == 2:
+            split_input = 'log_loss'
+        else:
+            split_input = 'gini'
+
         # add spacing
         print()
 
         # call function
-        visualizer.visualize_tree_classifier(file_input, output_name, depth_input)
+        visualizer.visualize_tree_classifier(file_input, output_name, depth_input, split_input)
         break
 
     elif choice_input == '9': # get forest visualization
@@ -239,7 +248,7 @@ while True:
         df = pd.read_csv("_imputed_data.csv")
 
         # select custom set of features / MODIFY HERE
-        custom_df = df[['Group', 'LCN2', 'Diabetes', 'Monocytes']]
+        custom_df = df[['Group', 'Diabetes', 'LCN2', 'OPN', 'AST', 'Hispanic']]
 
         # convert to csv file
         custom_df.to_csv("custom.csv", index = False)
